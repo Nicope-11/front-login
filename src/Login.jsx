@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import logo from "./img/logo.png";
@@ -12,64 +12,55 @@ import {
   InputLabel,
   OutlinedInput,
   FormHelperText,
+  Typography,
+  Alert,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { AuthContext } from "./AuthContext";
 
 function Login() {
+  const { isAuthenticated, setAuthentication } = useContext(AuthContext);
   const [values, setValues] = useState({
     usuario: "",
     password: "",
   });
   const navigate = useNavigate();
-
   const [errors, setErrors] = useState({});
+  const [loginError, setLoginError] = useState("");
 
   const handleChange = (event) => {
     setValues((prev) => ({
       ...prev,
       [event.target.name]: event.target.value,
     }));
-  };
-
-  const checkUserExistence = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:8081/checkUserExistence",
-        { usuario: values.usuario }
-      );
-      const data = response.data;
-
-      if (!data.exists) {
-        setErrors((prev) => ({
-          ...prev,
-          usuario: "Este usuario no existe",
-        }));
-      } else {
-        setErrors((prev) => ({
-          ...prev,
-          usuario: "",
-        }));
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    setErrors((prev) => ({
+      ...prev,
+      [event.target.name]: "",
+    }));
+    setLoginError("");
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!values.usuario || !values.password) {
+      setErrors({
+        usuario: !values.usuario ? "Por favor, ingrese un usuario" : "",
+        password: !values.password ? "Por favor, ingrese una contraseña" : "",
+      });
+      return;
+    }
 
     try {
       const response = await axios.post("http://localhost:8081/login", values);
       const data = response.data;
 
       if (data === "Success") {
+        setAuthentication(true);
         navigate("/home");
       } else {
-        setErrors((prev) => ({
-          ...prev,
-          password: "Contraseña incorrecta",
-        }));
+        setLoginError("Credenciales incorrectas");
       }
     } catch (error) {
       console.log(error);
@@ -99,12 +90,6 @@ function Login() {
     </InputAdornment>
   );
 
-  useEffect(() => {
-    if (values.usuario !== "") {
-      checkUserExistence();
-    }
-  }, [values.usuario]);
-
   return (
     <div className="d-flex justify-content-center align-items-center bg-primary vh-100">
       <div className="bg-white p-3 rounded w-25">
@@ -124,10 +109,9 @@ function Login() {
             />
           </Box>
 
-          <Box>
+          <Box sx={{ mt: 3 }}>
             <FormControl
               fullWidth
-              sx={{ mt: 3 }}
               variant="outlined"
               error={Boolean(errors.password)}
             >
@@ -148,6 +132,12 @@ function Login() {
             </FormControl>
           </Box>
 
+          {loginError && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {loginError}
+            </Alert>
+          )}
+
           <Button type="submit" fullWidth sx={{ mt: 3 }} variant="contained">
             Iniciar sesión
           </Button>
@@ -158,6 +148,3 @@ function Login() {
 }
 
 export default Login;
-
-
-

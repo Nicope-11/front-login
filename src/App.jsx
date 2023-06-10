@@ -1,16 +1,21 @@
-import React from "react"
-import Login from "./Login"
-import Home from "./Home"
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import React, { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./Login";
+import Home from "./Home";
+import { AuthProvider } from "./AuthContext";
 
 function App() {
+  const [isAuthenticated, setAuthentication] = useState(false);
+
   return (
-    <BrowserRouter>
-    <Routes>
-      <Route path='/' element={<Login/>}></Route>
-      <Route path='/home' element={<Home/>}></Route>
-    </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/home" element={<Home />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

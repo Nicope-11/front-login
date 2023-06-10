@@ -8,7 +8,7 @@ function Validation(values){
     }
  
     if(values.password === ""){
-     error.password = "Contraseña incorrecta"
+     error.password = "Debe poner su contraseña"
     }else{
      error.password = ""
     }

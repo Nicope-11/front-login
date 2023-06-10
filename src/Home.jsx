@@ -1,20 +1,22 @@
-import React from 'react'
+import React, { useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "./AuthContext";
 
-class Home extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        message: '¡Hola, Nicolás!' 
-      };
+function Home() {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/");
     }
-  
-    render() {
-      return (
-        <div>
-          <h1>{this.state.message}</h1>
-        </div>
-      );
-    }
-  }
-  
-  export default Home;
+  }, [isAuthenticated, navigate]);
+
+  return (
+    <div>
+      <h1>¡Hola, Nicolás!</h1>
+    </div>
+  );
+}
+
+export default Home;
