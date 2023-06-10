@@ -1,10 +1,8 @@
 function Validation(values){
-    alert("")
     let error = {}
- 
- 
+   
     if(values.usuario === ""){
-     error.usuario = "Este usuario no existe"
+     error.usuario = "Debe ingresar su usuario"
     }else{
      error.usuario = ""
     }
