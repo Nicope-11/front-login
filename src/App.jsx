@@ -1,21 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useContext } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Login";
 import Home from "./Home";
-import { AuthProvider } from "./AuthContext";
+import { AuthContext } from "./AuthContext";
 
 function App() {
-  const [isAuthenticated, setAuthentication] = useState(false);
+  const { isAuthenticated, setAuthentication } = useContext(AuthContext); // Importar isAuthenticated desde el contexto
+
+  useEffect(() => {
+    const storedAuth = localStorage.getItem("isAuthenticated");
+    if (storedAuth) {
+      setAuthentication(true);
+    }
+  }, [setAuthentication]);
 
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/home" element={<Home />} />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/home" element={isAuthenticated ? <Home /> : <Login />} /> {/* Validar si el usuario está autenticado */}
+      </Routes>
+    </BrowserRouter>
   );
 }
 
