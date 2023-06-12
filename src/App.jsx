@@ -5,7 +5,7 @@ import Home from "./Home";
 import { AuthContext } from "./AuthContext";
 
 function App() {
-  const { isAuthenticated, setAuthentication } = useContext(AuthContext); // Importar isAuthenticated desde el contexto
+  const { isAuthenticated, setAuthentication } = useContext(AuthContext);
 
   useEffect(() => {
     const storedAuth = localStorage.getItem("isAuthenticated");
@@ -18,7 +18,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/home" element={isAuthenticated ? <Home /> : <Login />} /> {/* Validar si el usuario está autenticado */}
+        <Route path="/home" element={isAuthenticated ? <Home /> : <Login />} />
       </Routes>
     </BrowserRouter>
   );

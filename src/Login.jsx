@@ -12,7 +12,6 @@ import {
   InputLabel,
   OutlinedInput,
   FormHelperText,
-  Typography,
   Alert,
   Container,
 } from "@mui/material";
@@ -62,13 +61,12 @@ function Login() {
       const data = response.data;
 
       if (data === "Success") {
-        setAuthentication(true); // Establecer el estado de autenticación en true
-        localStorage.setItem("isAuthenticated", "true"); // Almacenar la información en el localStorage
+        setAuthentication(true);
+        localStorage.setItem("isAuthenticated", "true");
         navigate("/home");
       } else {
         setLoginError("Credenciales incorrectas");
       }
-      
     } catch (error) {
       console.log(error);
     }
@@ -90,13 +88,19 @@ function Login() {
         onMouseDown={handleMouseDownPassword}
         edge="end"
       >
-        {showPassword ? <VisibilityOff /> : <Visibility />}
+        {showPassword ? <Visibility /> : <VisibilityOff />}
       </IconButton>
     </InputAdornment>
   );
 
   return (
-    <div className="bg-primary vh-100">
+    <Box
+      bgcolor="primary.main"
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="100vh"
+    >
       <Container
         maxWidth="xs"
         sx={{
@@ -164,7 +168,7 @@ function Login() {
           </form>
         </Box>
       </Container>
-    </div>
+    </Box>
   );
 }
 
